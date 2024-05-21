@@ -35,6 +35,20 @@ async function postLoginUserCtrl(req, res) {
     };
     const result = await UserService.loginUser(loginInfo);
     //- hier refresh token abfrage einfügen
+    if (result.tokens.refreshToken) {
+      req.session.refreshToken = result.tokens.refreshToken;
+    }
+    res.json({ result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err, message: err.message });
+  }
+}
+
+async function postRefreshAccessTokenCtrl(req, res) {
+  try {
+    const authenticatedUserId = req.authenticatedUserId;
+    const result = await UserService.refreshAccessToken(authenticatedUserId);
     res.json({ result });
   } catch (err) {
     console.log(err);
@@ -46,4 +60,5 @@ export const UserController = {
   postRegisterUserCtrl,
   postVerifyUserCtrl,
   postLoginUserCtrl,
+  postRefreshAccessTokenCtrl,
 };

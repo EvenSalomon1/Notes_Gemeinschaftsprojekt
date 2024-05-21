@@ -17,11 +17,12 @@ export async function loginUser({ email, password }) {
 
   if (!correctPassword) throw new Error("Invalid login");
 
-  const accessToken = createToken(user);
+  const accessToken = createToken(user, "access");
+  const refreshToken = createToken(user, "refresh");
 
   console.log(accessToken);
   return {
     user: userToView(user),
-    tokens: { accessToken },
+    tokens: { accessToken, refreshToken },
   };
 }
